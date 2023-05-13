@@ -1,25 +1,73 @@
-<오픈소스 기초 프로젝트 - 개표 시스템>
+<오픈소스 기초 프로젝트 - 일간 영화 순위 정보 제공>
 
 정보통신공학부 2022039056 최다연
 
-   ![image](https://user-images.githubusercontent.com/131672906/234009708-e580a085-613c-4be8-a37b-2f959a86d1da.png)
-
+ 
 -프로젝트 소개 
 
-선거나 투표와 관련된 데이터를 처리, 분석 하는 프로젝트로 선거나 투표 과정에서 발생하는 데이터에 대한 차리와 분석에 활용됩니다. 데이터를 시각화하여 필요한 정보를 효율적으로 활용하는데 도움될 것입니다.
+날짜를 선택하면 해당 날짜의 박스오피스 순위와 누적 관람객 수를 화면에 보여주는 프로그램입니다. 또한, 화면에 있는 영화를 클릭하면 개봉일, 감독, 주연 정보를 함께 제공합니다.
 
 -개발 환경 및 언어
 
-Visualstudio, C언어
+Visualstudiocode, javascript
 
--프로젝트 주요 기능
-데이터 입력 기능: 선거나 투표 과정에서 발생하는 데이터를 입력
+-소스코드
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+            $(function() {
+                let y = new Date();
+                y.setDate(y.getDate()-1);
+                let str = y.getFullYear() + "-"
+                + ("0" + (y.getMonth() + 1)).slice(-2) + "-"
+                + ("0" + y.getDate()).slice(-2);
+                $("#date").attr("max",str);
 
-데이터 저장 기능: 입력된 데이터를 데이터베이스에 저장
+                // 버튼의 클릭 이벤트
+                $("#mybtn").click(function() {
+                    let d = $("#date").val();//YYYY-MM-dd
+                    const regex = /-/g;
+                    let d_str = d.replace(regex,"")//YYYYMMdd 
 
-데이터 처리 기능: 입력된 데이터를 분석하여 선거나 투표 결과를 계산
+                    let url = "http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=f5eef3421c602c6cb7ea224104795888&targetDt="+d_str
 
-데이터 시각화 기능: 분석 결과를 그래프나 차트로 시각화
+                     $.getJSON(url, function(data) {
+                         let movieList = data.boxOfficeResult.dailyBoxOfficeList;
+                         $("#boxoffice").empty();
+                         $("#boxoffice").append(d+" 박스 오피스 순위<br>");
+                         for(let i in movieList){
+                             $("#boxoffice").append("<div class='movie' id="+movieList[i].movieCd+">"+(parseInt(i)+1)+". "+movieList[i].movieNm+" / "+movieList[i].audiAcc+"명</div><hr>");
+                             console.log(movieList[i].movieCd);
+                         }
+                        });
+                });//button click
+                //영화 제목 클릭시 영화 정보 출력
+                $("#boxoffice").on("click",".movie", function(){
+                    let d = $(this);
+                    let movieCd = d.attr("id");
+                    let url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json?key=f5eef3421c602c6cb7ea224104795888&movieCd="+movieCd;
+                    $.getJSON(url,function(res){
+                        let movie = res.movieInfoResult.movieInfo;
+                        d.append("<hr>");
+                        d.append("개봉일 : "+movie.openDt+"<br>");
+                        d.append("감독 : "+movie.directors[0].peopleNm+"<br>");
+                        d.append("주연 : "+movie.actors[0].peopleNm+", "+movie.actors[1].peopleNm+", "+movie.actors[2].peopleNm);
+                        d.append("<hr>");
 
+                    })
+                })
+            });//ready
+        </script>
 
-
+</head>
+<body>
+<input type="date" id="date"><button id="mybtn">확인</button>
+<div id="boxoffice">
+    박스 오피스 순위<br>
+</div>
+</body>
+</html>
