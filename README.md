@@ -18,6 +18,7 @@ Visualstudiocode, javascript
 영화의 관련 세부정보 제공
 
 -화면구성/API주소
+
 ![image](https://github.com/dayoni0301/ddayeoni22/assets/131672906/b15d1a6b-c1c1-401f-9eae-84a8defabaa2)
 
 http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml (또는 .json)
