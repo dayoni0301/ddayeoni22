@@ -19,5 +19,6 @@ Visualstudiocode, javascript
 
 -화면구성/API주소
 ![image](https://github.com/dayoni0301/ddayeoni22/assets/131672906/b15d1a6b-c1c1-401f-9eae-84a8defabaa2)
-기본 요청 URL : http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml (또는 .json)
+
+http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml (또는 .json)
 access key=f5eef3421c602c6cb7ea224104795888&targetDt=
